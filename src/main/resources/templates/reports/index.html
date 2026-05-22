@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Reports')}"></head>
+<body>
+<div class="app-wrapper">
+  <div th:replace="~{fragments/layout :: sidebar('reports')}"></div>
+  <div class="main-content">
+    <div th:replace="~{fragments/layout :: topbar('Reports','Analyze your income and expenses')}"></div>
+    <div class="page-content">
+
+      <div class="stat-cards">
+        <div class="stat-card wave-green"><div class="stat-card-icon green"><i class="fas fa-arrow-up"></i></div><div class="stat-card-label">Total Income</div><div class="stat-card-value green">₹58,000.00</div><div class="stat-card-sub">All time income</div></div>
+        <div class="stat-card wave-red"><div class="stat-card-icon red"><i class="fas fa-arrow-down"></i></div><div class="stat-card-label">Total Expenses</div><div class="stat-card-value red">₹12,000.00</div><div class="stat-card-sub">All time expenses</div></div>
+        <div class="stat-card wave-blue"><div class="stat-card-icon blue"><i class="fas fa-wallet"></i></div><div class="stat-card-label">Total Balance</div><div class="stat-card-value blue">₹46,000.00</div><div class="stat-card-sub">Current balance</div></div>
+        <div class="stat-card wave-yellow"><div class="stat-card-icon yellow"><i class="fas fa-piggy-bank"></i></div><div class="stat-card-label">Savings Rate</div><div class="stat-card-value yellow">79.3%</div><div class="stat-card-sub">Income saved</div></div>
+      </div>
+
+      <!-- Trend Chart -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header">
+          <span class="card-title">Last Week Income &amp; Expenses Trend</span>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <select class="form-control form-select" style="width:140px;font-size:12px;padding:6px 32px 6px 10px;"><option>Last 7 Days</option><option>Last Month</option></select>
+            <button class="btn btn-primary btn-sm"><i class="fas fa-upload"></i> Export</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div style="height:260px;"><canvas id="trendChart"></canvas></div>
+          <div style="display:flex;gap:20px;justify-content:center;margin-top:12px;font-size:13px;">
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#00C896;margin-right:5px;"></span>Income</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#E91E8C;margin-right:5px;"></span>Expense</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid-2">
+        <!-- Expense Breakdown -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Expense Breakdown</span></div>
+          <div class="card-body" style="display:flex;align-items:center;gap:24px;">
+            <div style="width:180px;height:180px;flex-shrink:0;"><canvas id="pieChart"></canvas></div>
+            <div style="flex:1;">
+              <div style="font-size:12px;color:#E91E8C;margin-bottom:4px;">Food &amp; Dining (38%)</div>
+              <div style="font-size:12px;color:#F5A623;margin-bottom:4px;">Shopping (29%)</div>
+              <div style="font-size:12px;color:#FF4B6E;margin-bottom:4px;">Bills &amp; Utilities (17%)</div>
+              <div style="font-size:12px;color:#6C3EF4;margin-bottom:4px;">Transportation (10%)</div>
+              <div style="font-size:12px;color:#5B6CF9;">Entertainment (7%)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Details -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Category Details</span></div>
+          <div class="card-body">
+            <div class="category-row"><div class="category-icon">🍔</div><div style="flex:1;"><div class="category-label">Food</div><div class="cat-bar-bg"><div class="cat-bar-fill" style="width:38%;background:#E91E8C;"></div></div></div><div class="category-amount">₹450</div><div class="category-pct">38%</div></div>
+            <div class="category-row"><div class="category-icon">🛍️</div><div style="flex:1;"><div class="category-label">Shopping</div><div class="cat-bar-bg"><div class="cat-bar-fill" style="width:29%;background:#F5A623;"></div></div></div><div class="category-amount">₹350</div><div class="category-pct">28%</div></div>
+            <div class="category-row"><div class="category-icon">💡</div><div style="flex:1;"><div class="category-label">Bills &amp; Utilities</div><div class="cat-bar-bg"><div class="cat-bar-fill" style="width:17%;background:#FF4B6E;"></div></div></div><div class="category-amount">₹200</div><div class="category-pct">17%</div></div>
+            <div class="category-row"><div class="category-icon">🚌</div><div style="flex:1;"><div class="category-label">Transportation</div><div class="cat-bar-bg"><div class="cat-bar-fill" style="width:10%;background:#6C3EF4;"></div></div></div><div class="category-amount">₹120</div><div class="category-pct">10%</div></div>
+            <div class="category-row"><div class="category-icon">🎬</div><div style="flex:1;"><div class="category-label">Entertainment</div><div class="cat-bar-bg"><div class="cat-bar-fill" style="width:7%;background:#5B6CF9;"></div></div></div><div class="category-amount">₹80</div><div class="category-pct">7%</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-grid-2" style="margin-top:20px;">
+        <!-- Top Spending -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">Top Spending</span></div>
+          <div class="card-body" style="padding:8px 20px;">
+            <div class="txn-item"><div class="txn-icon">🍔</div><div class="txn-info"><div class="txn-name">Groceries and restaurants</div><div class="txn-meta">Food &amp; Dining · 19/03/2026</div></div><div class="txn-amount amount-expense">₹450</div></div>
+            <div class="txn-item"><div class="txn-icon">🛍️</div><div class="txn-info"><div class="txn-name">Clothing and accessories</div><div class="txn-meta">Shopping · 15/03/2026</div></div><div class="txn-amount amount-expense">₹350</div></div>
+            <div class="txn-item"><div class="txn-icon">💡</div><div class="txn-info"><div class="txn-name">Electricity and internet</div><div class="txn-meta">Bills &amp; Utilities · 10/03/2026</div></div><div class="txn-amount amount-expense">₹450</div></div>
+            <div class="txn-item"><div class="txn-icon">🚌</div><div class="txn-info"><div class="txn-name">Gas and public transport</div><div class="txn-meta">Transportation · 07/03/2026</div></div><div class="txn-amount amount-expense">₹450</div></div>
+            <div class="txn-item"><div class="txn-icon">🎬</div><div class="txn-info"><div class="txn-name">Movie tickets and streaming</div><div class="txn-meta">Entertainment · 05/03/2026</div></div><div class="txn-amount amount-expense">₹450</div></div>
+          </div>
+        </div>
+        <!-- Smart Insights -->
+        <div class="insight-box" style="align-self:start;">
+          <div class="insight-title"><i class="fas fa-lightbulb"></i> Smart Insights</div>
+          <div class="insight-item"><span class="insight-dot"></span> Bills are stable compared to last period</div>
+          <div class="insight-item"><span class="insight-dot"></span> Great job! You're saving 79% of your income</div>
+        </div>
+      </div>
+    </div>
+    <div th:replace="~{fragments/layout :: footer}"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+  const months = ['Mar 1','Mar 2','Mar 3','Mar 4','Mar 5','Mar 6','Mar 7'];
+  new Chart(document.getElementById('trendChart'), {
+    type:'line',
+    data:{ labels:months, datasets:[
+      {label:'Income',data:[5000,800,400,1600,200,300,100],borderColor:'#00C896',backgroundColor:'rgba(0,200,150,0.15)',fill:true,tension:0.5,pointRadius:0},
+      {label:'Expense',data:[200,300,500,200,800,600,300],borderColor:'#E91E8C',backgroundColor:'rgba(233,30,140,0.08)',fill:true,tension:0.5,pointRadius:0}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{family:'Inter',size:11},color:'#aaa'}},y:{grid:{color:'#F5F5FB'},ticks:{font:{family:'Inter',size:11},color:'#aaa'}}}}
+  });
+  new Chart(document.getElementById('pieChart'), {
+    type:'doughnut',
+    data:{labels:['Food','Shopping','Bills','Transport','Entertainment'],datasets:[{data:[38,29,17,10,7],backgroundColor:['#E91E8C','#F5A623','#FF4B6E','#6C3EF4','#5B6CF9'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:true,cutout:'60%',plugins:{legend:{display:false}}}
+  });
+</script>
+</body>
+</html>

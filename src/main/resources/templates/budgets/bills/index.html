@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bills')}"></head>
+<body>
+<div class="app-wrapper">
+  <div th:replace="~{fragments/layout :: sidebar('bills')}"></div>
+  <div class="main-content">
+    <div th:replace="~{fragments/layout :: topbar('Bills','Track and manage all your recurring payments')}"></div>
+    <div class="page-content">
+      <div class="stat-cards stat-cards-3">
+        <div class="stat-card"><div class="stat-card-icon blue"><i class="fas fa-file-invoice-dollar"></i></div><div class="stat-card-label">Total Bills</div><div class="stat-card-value blue">₹ 2,500</div><div class="stat-card-sub">Current balance</div></div>
+        <div class="stat-card"><div class="stat-card-icon green"><i class="fas fa-check-circle"></i></div><div class="stat-card-label">Paid This Month</div><div class="stat-card-value green">₹ 1,200</div><div class="stat-card-sub">All time income</div></div>
+        <div class="stat-card"><div class="stat-card-icon red"><i class="fas fa-exclamation-circle"></i></div><div class="stat-card-label">Pending Bills</div><div class="stat-card-value red">₹ 1,300</div><div class="stat-card-sub">All time expenses</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Your Bills</span><a href="#" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Bill</a></div>
+        <div class="card-body">
+          <div class="bill-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/3659/3659898.png" class="bill-icon" alt="bill"/>
+            <div class="bill-info"><div class="bill-name">Electricity Bill <span class="badge badge-pending" style="margin-left:8px;">Pending</span></div><div class="bill-id">ID: EB-123456</div><div class="bill-due">Due: 28 Mar 2026</div></div>
+            <span class="bill-amount">₹1200</span><button class="btn-pay">Pay Now</button>
+          </div>
+          <div class="bill-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/2175/2175292.png" class="bill-icon" alt="bill"/>
+            <div class="bill-info"><div class="bill-name">Gas Bill <span class="badge badge-paid" style="margin-left:8px;">Paid</span></div><div class="bill-id">ID: GB-567890</div><div class="bill-due">Due: 25 Mar 2026</div></div>
+            <span style="color:#00C896;font-weight:700;font-size:16px;margin-right:16px;">₹800</span>
+          </div>
+          <div class="bill-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/2593/2593635.png" class="bill-icon" alt="bill"/>
+            <div class="bill-info"><div class="bill-name">Internet Bill <span class="badge badge-pending" style="margin-left:8px;">Pending</span></div><div class="bill-id">ID: IB-112233</div><div class="bill-due">Due: 20 Mar 2026</div></div>
+            <span class="bill-amount">₹500</span><button class="btn-pay">Pay Now</button>
+          </div>
+          <div class="bill-item">
+            <img src="https://cdn-icons-png.flaticon.com/512/186/186240.png" class="bill-icon" alt="bill"/>
+            <div class="bill-info"><div class="bill-name">Mobile Recharge <span class="badge badge-expired" style="margin-left:8px;">Expired</span></div><div class="bill-id">No: XXXXXXXX98</div><div class="bill-due">Due: 20 Feb 2026</div></div>
+            <span class="bill-amount">₹399</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div th:replace="~{fragments/layout :: footer}"></div>
+  </div>
+</div>
+</body>
+</html>

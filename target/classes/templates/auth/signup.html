@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title>Sign Up | Vetri FinTrack</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    background:linear-gradient(135deg,#7B4FD4 0%,#C94B8A 50%,#E8534A 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.card{
+    background:#fff;
+    border-radius:24px;
+    width:100%;
+    max-width:960px;
+    min-height:620px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.3);
+}
+
+/* LEFT - FORM */
+.left{
+    padding:28px 44px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+h2{
+    font-size:26px;
+    font-weight:800;
+    color:#1a1a2e;
+    margin-bottom:4px;
+}
+
+.sub{
+    font-size:14px;
+    color:#666;
+    margin-bottom:16px;
+}
+
+label{
+    display:block;
+    font-size:13.5px;
+    font-weight:600;
+    color:#1a1a2e;
+    margin-bottom:6px;
+}
+
+.fg{
+    margin-bottom:10px;
+}
+
+input{
+    width:100%;
+    padding:9px 14px;
+    border:1.5px solid #E8E8F0;
+    border-radius:10px;
+    font-size:14px;
+    background:#F7F5FF;
+    color:#1a1a2e;
+    outline:none;
+    font-family:inherit;
+    transition:border-color .2s;
+}
+
+input:focus{
+    border-color:#6C3EF4;
+    background:#fff;
+}
+
+.btn{
+    width:100%;
+    padding:10px;
+    background:#6C3EF4;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:inherit;
+    margin-top:4px;
+}
+
+.btn:hover{
+    background:#5730d4;
+}
+
+.srow{
+    text-align:center;
+    margin-top:10px;
+    font-size:13.5px;
+    color:#666;
+}
+
+.srow a{
+    color:#E91E8C;
+    font-weight:600;
+    text-decoration:none;
+}
+
+.div{
+    text-align:center;
+    color:#bbb;
+    font-size:13px;
+    margin:8px 0;
+}
+
+.gbtn{
+    width:100%;
+    padding:9px;
+    border:1.5px solid #E0E0E0;
+    border-radius:10px;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-size:13.5px;
+    cursor:pointer;
+    font-family:inherit;
+    color:#333;
+}
+
+.gbtn:hover{
+    background:#f8f8ff;
+}
+
+.terms{
+    text-align:center;
+    margin-top:8px;
+    font-size:11.5px;
+    color:#aaa;
+}
+
+.err{
+    background:#FFEEF2;
+    color:#CC0033;
+    border:1px solid #FFD0DB;
+    padding:10px 14px;
+    border-radius:8px;
+    font-size:13px;
+    margin-bottom:14px;
+}
+
+/* RIGHT SIDE */
+.right{
+    position:relative;
+    background:white;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+/* LOGO TOP RIGHT INSIDE CARD */
+.logo-top-right{
+    position:absolute;
+    top:15px;
+    right:30px;
+}
+
+.logo-top-right img{
+    width:auto;
+    height:200px;
+    object-fit:contain;
+}
+
+/* IMAGE */
+.right img.illus{
+    width:100%;
+    max-width:420px;
+    object-fit:contain;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+    .right{
+        display:none;
+    }
+
+    .left{
+        padding:32px 24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <!-- LEFT -->
+    <div class="left">
+
+        <h2>Create Account</h2>
+        <p class="sub">Sign up to get started</p>
+
+        <div th:if="${error}" class="err" th:text="${error}"></div>
+
+        <form th:action="@{/auth/signup}" method="post">
+
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}"/>
+
+            <div class="fg">
+                <label>Enter Name*</label>
+                <input type="text"
+                       name="name"
+                       placeholder="Enter Name"
+                       required/>
+            </div>
+
+            <div class="fg">
+                <label>Phone Number</label>
+                <input type="tel"
+                       name="phone"
+                       placeholder="Enter Phone Number"/>
+            </div>
+
+            <div class="fg">
+                <label>Email Id*</label>
+                <input type="email"
+                       name="email"
+                       placeholder="Enter Email Address"
+                       required/>
+            </div>
+
+            <div class="fg">
+                <label>Password*</label>
+                <input type="password"
+                       name="password"
+                       placeholder="Create Password"
+                       required/>
+            </div>
+
+            <button type="submit" class="btn">
+                Sign Up
+            </button>
+        </form>
+
+        <div class="srow">
+            Already have an account?
+            <a th:href="@{/auth/login}">
+                Login
+            </a>
+        </div>
+
+        <div class="div">or</div>
+
+        <a href="/oauth2/authorization/google" class="gbtn" style="text-decoration:none;">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                 width="18"
+                 alt="G"/>
+            Continue With Google
+        </a>
+
+        <p class="terms">
+            By creating an account, you agree to our Terms and Privacy Policy.
+        </p>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+
+        <!-- LOGO -->
+        <div class="logo-top-right">
+            <img th:src="@{/images/logo.png}"
+                 alt="Vetri FinTrack"/>
+        </div>
+
+        <!-- IMAGE -->
+        <img class="illus"
+             th:src="@{/images/manimageinlogin.png}"
+             alt="Finance Illustration"/>
+
+    </div>
+
+</div>
+
+</body>
+</html>

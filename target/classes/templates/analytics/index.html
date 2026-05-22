@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Analytics')}"></head>
+<body>
+<div class="app-wrapper">
+    <div th:replace="~{fragments/layout :: sidebar('analytics')}"></div>
+    <div class="main-content">
+        <div th:replace="~{fragments/layout :: topbar('Analytics', 'Visual insights into your financial performance')}"></div>
+        <div class="page-content">
+            <div class="page-header">
+                <div class="page-header-left">
+                    <div class="page-title">Financial Analytics</div>
+                    <div class="page-subtitle">Year <span th:text="${year}">2024</span></div>
+                </div>
+                <form th:action="@{/analytics}" method="get" style="display:flex;gap:8px;align-items:center;">
+                    <input type="number" name="year" class="form-control" th:value="${year}"
+                           style="width:100px;" min="2000" max="2099"/>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Monthly Bar Chart</span></div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height:240px;">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Revenue Trend</span></div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height:240px;">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 2fr;gap:20px;">
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Distribution</span></div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height:240px;">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Income, Expense and Profit</span></div>
+                    <div class="card-body">
+                        <div class="chart-container" style="height:240px;">
+                            <canvas id="areaChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script th:inline="javascript">
+    const cd = /*[[${chartData}]]*/ {income: [], expense: []};
+    const income = cd.income || Array(12).fill(0);
+    const expense = cd.expense || Array(12).fill(0);
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const baseOpts = {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { font: { family: 'Inter', size: 11 }, usePointStyle: true } } },
+        scales: {
+            x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 10 } } },
+            y: { grid: { color: '#F1F5F9' }, ticks: { font: { family: 'Inter', size: 10 } } }
+        }
+    };
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: { labels: months, datasets: [
+            { label: 'Income', data: income, backgroundColor: 'rgba(16,185,129,0.85)', borderRadius: 5 },
+            { label: 'Expense', data: expense, backgroundColor: 'rgba(239,68,68,0.85)', borderRadius: 5 }
+        ]},
+        options: baseOpts
+    });
+    new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: { labels: months, datasets: [
+            { label: 'Income', data: income, borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.4 },
+            { label: 'Expense', data: expense, borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.4 }
+        ]},
+        options: baseOpts
+    });
+    const totalIn = income.reduce((a,b) => a+b, 0);
+    const totalEx = expense.reduce((a,b) => a+b, 0);
+    new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: { labels: ['Income', 'Expense'], datasets: [{ data: [totalIn, totalEx], backgroundColor: ['#10B981','#EF4444'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '65%',
+            plugins: { legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 11 }, usePointStyle: true } } } }
+    });
+    const profit = income.map((v, i) => v - expense[i]);
+    new Chart(document.getElementById('areaChart'), {
+        type: 'line',
+        data: { labels: months, datasets: [
+            { label: 'Income', data: income, borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.08)', fill: true, tension: 0.4 },
+            { label: 'Expense', data: expense, borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.08)', fill: true, tension: 0.4 },
+            { label: 'Profit', data: profit, borderColor: '#3B82F6', backgroundColor: 'rgba(59,130,246,0.08)', fill: true, tension: 0.4, borderDash: [5,3] }
+        ]},
+        options: baseOpts
+    });
+</script>
+</body>
+</html>

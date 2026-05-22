@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Transactions')}"></head>
+<body>
+<div class="app-wrapper">
+  <div th:replace="~{fragments/layout :: sidebar('transactions')}"></div>
+  <div class="main-content">
+    <div th:replace="~{fragments/layout :: topbar('Transactions','Track all your income and expenses')}"></div>
+    <div class="page-content">
+
+      <div th:if="${success}" class="alert alert-success"><i class="fas fa-check-circle"></i> <span th:text="${success}"></span></div>
+
+      <!-- Stat Cards -->
+      <div class="stat-cards stat-cards-3">
+        <div class="stat-card">
+          <div class="stat-card-icon green"><i class="fas fa-arrow-up"></i></div>
+          <div class="stat-card-label">Total Income</div>
+          <div class="stat-card-value green">₹<span th:text="${#numbers.formatDecimal(totalRevenue,1,'COMMA',2,'POINT')}">0</span></div>
+          <div class="stat-card-sub">All time income</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon red"><i class="fas fa-arrow-down"></i></div>
+          <div class="stat-card-label">Total Expenses</div>
+          <div class="stat-card-value red">₹<span th:text="${#numbers.formatDecimal(totalExpense,1,'COMMA',2,'POINT')}">0</span></div>
+          <div class="stat-card-sub">All time expenses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon blue"><i class="fas fa-wallet"></i></div>
+          <div class="stat-card-label">Net Balance</div>
+          <div class="stat-card-value blue">₹<span th:text="${#numbers.formatDecimal(totalRevenue - totalExpense,1,'COMMA',2,'POINT')}">0</span></div>
+          <div class="stat-card-sub">Current balance</div>
+        </div>
+      </div>
+
+      <!-- Search + Filter -->
+      <form th:action="@{/transactions}" method="get" class="search-bar">
+        <div class="search-input-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" name="keyword" class="search-input" placeholder="Search Transactions" th:value="${param.keyword}"/>
+        </div>
+        <select name="period" class="form-control form-select" style="width:150px;">
+          <option>Last 7 Days</option><option>This Month</option><option>All Time</option>
+        </select>
+        <select name="type" class="form-control form-select" style="width:120px;">
+          <option value="">All</option>
+          <option value="INCOME" th:selected="${param.type=='INCOME'}">Income</option>
+          <option value="EXPENSE" th:selected="${param.type=='EXPENSE'}">Expense</option>
+        </select>
+        <a th:href="@{/transactions/add}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Transaction</a>
+      </form>
+
+      <!-- Transaction List -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Transaction</span>
+          <span style="font-size:13px;color:#aaa;" th:text="${#lists.size(transactions)} + ' records'"></span>
+        </div>
+        <div class="card-body" style="padding:8px 20px;">
+          <div th:each="t : ${transactions}" class="txn-item">
+            <div class="txn-icon">
+              <span th:switch="${t.category}">
+                <span th:case="'Food'">🍔</span>
+                <span th:case="'Shopping'">🛍️</span>
+                <span th:case="'Sales'">💰</span>
+                <span th:case="'Travel'">✈️</span>
+                <span th:case="'Utilities'">💡</span>
+                <span th:case="'Investments'">📈</span>
+                <span th:case="'Marketing'">📢</span>
+                <span th:case="'Office'">🏢</span>
+                <span th:case="*">💳</span>
+              </span>
+            </div>
+            <div class="txn-info">
+              <div class="txn-name" th:text="${t.title}">-</div>
+              <div class="txn-meta" th:text="${t.category} + ' • ' + ${#temporals.format(t.date,'dd MMM yyyy')} + ' • ' + ${t.status}">-</div>
+            </div>
+            <div class="txn-amount" th:classappend="${t.type.name()=='INCOME'}?'amount-income':'amount-expense'"
+                 th:text="(${t.type.name()=='INCOME'}?'+':'-')+'₹'+${#numbers.formatDecimal(t.amount,1,'COMMA',2,'POINT')}">₹0</div>
+            <div style="display:flex;gap:8px;margin-left:12px;">
+              <a th:href="@{/transactions/edit/{id}(id=${t.id})}" style="color:#aaa;font-size:15px;text-decoration:none;"><i class="fas fa-pencil-alt"></i></a>
+              <a th:href="@{/transactions/delete/{id}(id=${t.id})}" style="color:#FF4B6E;font-size:15px;text-decoration:none;" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a>
+            </div>
+          </div>
+          <div th:if="${#lists.isEmpty(transactions)}" style="text-align:center;padding:40px;color:#aaa;">
+            <i class="fas fa-inbox" style="font-size:36px;display:block;margin-bottom:10px;"></i> No transactions found
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;align-items:center;gap:8px;padding:16px;border-top:1px solid #F5F5FB;font-size:13px;color:#aaa;">
+          <a href="#" style="color:#aaa;text-decoration:none;">← Previous</a>
+          <span style="padding:4px 10px;background:#6C3EF4;color:#fff;border-radius:6px;">1</span>
+          <a href="#" style="color:#6C3EF4;text-decoration:none;">2</a>
+          <a href="#" style="color:#6C3EF4;text-decoration:none;">3</a>
+          <a href="#" style="color:#aaa;text-decoration:none;">Next →</a>
+        </div>
+      </div>
+    </div>
+    <div th:replace="~{fragments/layout :: footer}"></div>
+  </div>
+</div>
+</body>
+</html>

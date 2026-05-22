@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Users')}"></head>
+<body>
+<div class="app-wrapper">
+    <div th:replace="~{fragments/layout :: sidebar('users')}"></div>
+    <div class="main-content">
+        <div th:replace="~{fragments/layout :: topbar('User Management', 'Manage system users and roles')}"></div>
+        <div class="page-content">
+            <div th:if="${success}" class="alert alert-success">
+                <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+            </div>
+            <div class="page-header">
+                <div class="page-header-left">
+                    <div class="page-title">System Users</div>
+                    <div class="page-subtitle" th:text="${#lists.size(users)} + ' users registered'">0 users</div>
+                </div>
+                <a th:href="@{/admin/users/add}" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Add User
+                </a>
+            </div>
+            <div class="card">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u, i : ${users}">
+                                <td th:text="${i.count}" style="color:#94A3B8;font-size:12px;"></td>
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div style="width:34px;height:34px;border-radius:50%;background:#3B82F6;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;"
+                                             th:text="${u.name?.substring(0,1)?.toUpperCase()}">A</div>
+                                        <span style="font-weight:500;" th:text="${u.name}">-</span>
+                                    </div>
+                                </td>
+                                <td style="color:#64748B;" th:text="${u.email}">-</td>
+                                <td>
+                                    <span class="badge"
+                                          th:classappend="${u.role.name() == 'ADMIN'} ? ' badge-danger' : (${u.role.name() == 'FINANCE_MANAGER'} ? ' badge-info' : ' badge-secondary')"
+                                          th:text="${u.role}">-</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-success" th:if="${u.status.name() == 'ACTIVE'}">Active</span>
+                                    <span class="badge badge-secondary" th:unless="${u.status.name() == 'ACTIVE'}">Inactive</span>
+                                </td>
+                                <td style="color:#64748B;"
+                                    th:text="${u.createdAt != null} ? ${#temporals.format(u.createdAt, 'dd MMM yyyy')} : '-'">-</td>
+                                <td>
+                                    <a th:href="@{/admin/users/edit/{id}(id=${u.id})}" class="btn btn-sm btn-outline">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{/admin/users/delete/{id}(id=${u.id})}" class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Delete this user?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

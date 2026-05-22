@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title} + ' | Vetri FinTrack'">Vetri FinTrack</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <script th:src="@{/js/app.js}" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<div th:fragment="sidebar(activePage)">
+<aside class="sidebar">
+   <div class="sidebar-brand" style="padding:12px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div style="background:#fff;border-radius:12px;padding:10px 14px;width:100%;display:flex;align-items:center;justify-content:center;">
+        <img th:src="@{/images/logo.png}" alt="Vetri FinTrack" style="height:36px;width:auto;object-fit:contain;"/>
+    </div>
+</div>
+    <nav class="sidebar-nav">
+        <a th:href="@{/dashboard}" th:classappend="${activePage=='dashboard'}?'active':''">
+            <span class="nav-icon"><i class="fas fa-th-large"></i></span> Dashboard
+        </a>
+        <a th:href="@{/transactions}" th:classappend="${activePage=='transactions'}?'active':''">
+            <span class="nav-icon"><i class="fas fa-sync-alt"></i></span> Transactions
+        </a>
+        <a th:href="@{/bills}" th:classappend="${activePage=='bills'}?'active':''">
+            <span class="nav-icon"><i class="fas fa-file-invoice"></i></span> Bills
+        </a>
+        <a th:href="@{/reports}" th:classappend="${activePage=='reports'}?'active':''">
+            <span class="nav-icon"><i class="fas fa-chart-bar"></i></span> Reports
+        </a>
+        <a th:href="@{/budgets}" th:classappend="${activePage=='budgets'}?'active':''">
+            <span class="nav-icon"><i class="fas fa-wallet"></i></span> Budgets
+            <span class="dot"></span>
+        </a>
+        <a th:href="@{/accounts}" th:classappend="${activePage=='accounts'}?'active':''">
+            <span class="nav-icon"><i class="fas fa-university"></i></span> Accounts
+        </a>
+        <a th:href="@{/settings}" th:classappend="${activePage=='settings'}?'active':''">
+            <span class="nav-icon"><i class="fas fa-cog"></i></span> Settings
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <!-- Logout triggers modal instead of direct logout -->
+        <a href="#" onclick="openLogoutModal(); return false;">
+            <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span> Logout
+        </a>
+    </div>
+</aside>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:20px;padding:44px 48px;width:100%;max-width:480px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);margin:20px;">
+        <img src="/images/ChatGPT Image Mar 20, 2026, 12_20_02 PM.png" style="width:80px;height:80px;margin-bottom:20px;" alt="logout"/>
+        <h2 style="font-size:24px;font-weight:800;color:#1a1a2e;margin-bottom:12px;">Logout</h2>
+        <p style="font-size:14px;color:#666;line-height:1.6;margin-bottom:32px;">Are you sure you want to logout from<br/>your account?</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <button onclick="closeLogoutModal()"
+                    style="padding:14px;border:1.5px solid #ddd;border-radius:12px;background:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:#555;transition:all .2s;">
+                Cancel
+            </button>
+            <a th:href="@{/auth/logout}"
+               style="padding:14px;background:#6C3EF4;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;text-decoration:none;display:flex;align-items:center;justify-content:center;transition:all .2s;">
+                Logout
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:fragment="topbar(title, subtitle)">
+<div class="topbar">
+    <div class="topbar-left">
+        <div class="page-title" th:text="${title}">Page</div>
+        <div class="page-subtitle" th:text="${subtitle}">subtitle</div>
+    </div>
+    <div class="topbar-right">
+        <a th:href="@{/notifications}" class="notif-btn"><i class="fas fa-bell"></i></a>
+        <div class="user-chip">
+            <div class="user-avatar"
+                 th:if="${currentUser != null and currentUser.profilePic != null}"
+                 style="overflow:hidden;">
+                <img th:src="@{'/uploads/profiles/' + ${currentUser.profilePic}}" style="width:100%;height:100%;object-fit:cover;" alt="avatar"/>
+            </div>
+            <div class="user-avatar"
+                 th:unless="${currentUser != null and currentUser.profilePic != null}"
+                 th:text="${currentUser != null} ? ${currentUser.name?.substring(0,1)?.toUpperCase()} : 'U'">U</div>
+            <span class="user-name" th:text="${currentUser != null} ? ${currentUser.name} : 'User'">User</span>
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:fragment="footer">
+<div class="page-footer">
+    <p>© 2026 Smart Finance. All rights reserved.</p>
+    <div style="margin-top:6px;">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+        <a href="#">Help Center</a>
+        <a href="#">Contact</a>
+    </div>
+</div>
+</div>
+
+<script th:fragment="logoutScript">
+function openLogoutModal() {
+    var m = document.getElementById('logoutModal');
+    m.style.display = 'flex';
+}
+function closeLogoutModal() {
+    var m = document.getElementById('logoutModal');
+    m.style.display = 'none';
+}
+// Close on backdrop click
+document.addEventListener('DOMContentLoaded', function() {
+    var modal = document.getElementById('logoutModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeLogoutModal();
+        });
+    }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Setup | Vetri FinTrack</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"Inter",sans-serif;min-height:100vh;background:#fff;display:flex;flex-direction:column;}
+.top-logo{padding:8px 40px;display:flex;align-items:center;gap:10px;}
+.top-logo img{height:200px;width:auto;}
+.page-header{text-align:center;margin:8px 0 16px;}
+.page-header h1{font-size:26px;font-weight:700;color:#1a1a2e;}
+.page-header p{font-size:14px;color:#666;margin-top:6px;}
+.wizard-card{background:#fff;border-radius:20px;border:2px solid;border-image:linear-gradient(135deg,#E91E8C,#6C3EF4) 1;width:100%;max-width:720px;margin:0 auto;padding:24px 48px;box-shadow:0 4px 32px rgba(108,62,244,0.06);}
+.card-title{font-size:20px;font-weight:700;color:#1a1a2e;text-align:center;margin-bottom:28px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.form-group{display:flex;flex-direction:column;gap:7px;}
+.form-group.full{grid-column:1/-1;}
+label{font-size:13.5px;font-weight:600;color:#1a1a2e;}
+input,select{padding:11px 14px;border:1.5px solid #E8E8F0;border-radius:10px;font-size:14px;background:#F5F5FA;color:#1a1a2e;outline:none;font-family:inherit;width:100%;}
+input:focus,select:focus{border-color:#6C3EF4;background:#fff;}
+.btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:28px;}
+.btn-back{padding:12px 36px;border:1.5px solid #ddd;border-radius:10px;background:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;color:#555;}
+.btn-continue{padding:12px 36px;background:#6C3EF4;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-skip{padding:12px 28px;border:1.5px solid #ddd;border-radius:10px;background:#fff;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;color:#555;}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;}
+.choice-btn{padding:22px 16px;border:1.5px solid #E8E8F0;border-radius:12px;background:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;color:#1a1a2e;text-align:center;transition:all .2s;}
+.choice-btn:hover,.choice-btn.selected{border-color:#6C3EF4;background:#F3EFFF;color:#6C3EF4;}
+.check-list{display:flex;flex-direction:column;gap:16px;margin-bottom:8px;}
+.check-item{display:flex;align-items:center;gap:14px;font-size:15px;color:#1a1a2e;cursor:pointer;}
+.check-item input[type=checkbox]{width:22px;height:22px;border-radius:6px;accent-color:#6C3EF4;cursor:pointer;flex-shrink:0;}
+footer{text-align:center;padding:28px 0 16px;color:#aaa;font-size:12px;margin-top:auto;}
+footer a{color:#aaa;text-decoration:none;margin:0 12px;}
+footer a:hover{color:#6C3EF4;}
+.salary-wrap{position:relative;max-width:440px;margin:0 auto 8px;}
+.salary-wrap span{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;color:#666;}
+.salary-wrap input{padding-left:36px;}
+</style></head>
+<body>
+<div class="top-logo"><img th:src="@{/images/logo.png}" alt="Vetri FinTrack"/></div>
+<div class="page-header"><h1>Let's Set Up Your Finances ⭐</h1><p>Let's Set Up Your Finances</p></div>
+<div class="wizard-card">
+  <div class="card-title">What is your monthly income?</div>
+  <form th:action="@{/onboarding/step2}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <div class="form-group full" style="max-width:440px;margin:0 auto 8px;">
+      <label>Salary</label>
+      <div class="salary-wrap">
+        <span>₹</span>
+        <input type="number" name="salary" placeholder="0" min="0" step="0.01" required/>
+      </div>
+    </div>
+    <div class="btn-row">
+      <a th:href="@{/onboarding/step1}" class="btn-back">Back</a>
+      <button type="submit" class="btn-continue">Continue</button>
+    </div>
+  </form>
+</div>
+<footer><p>© 2026 Smart Finance. All rights reserved.</p><div style="margin-top:8px;"><a href="#">Privacy Policy</a><a href="#">Terms</a><a href="#">Help Center</a><a href="#">Contact</a></div></footer>
+</body></html>

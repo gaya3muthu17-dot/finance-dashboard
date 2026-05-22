@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body>
+<div class="app-wrapper">
+  <div th:replace="~{fragments/layout :: sidebar('dashboard')}"></div>
+  <div class="main-content">
+    <div th:replace="~{fragments/layout :: topbar('Dashboard','Welcome back! Here\'s your financial overview')}"></div>
+    <div class="page-content">
+
+      <!-- Stat Cards -->
+      <div class="stat-cards" style="margin-bottom:20px;">
+        <div class="stat-card">
+          <div class="stat-card-icon blue"><i class="fas fa-wallet"></i></div>
+          <div class="stat-card-label">Total Balance</div>
+          <div class="stat-card-value blue">₹<span th:text="${#numbers.formatDecimal(totalRevenue - totalExpense,1,'COMMA',2,'POINT')}">0</span></div>
+          <div class="stat-card-sub">Current balance</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon green"><i class="fas fa-arrow-up"></i></div>
+          <div class="stat-card-label">Total Income</div>
+          <div class="stat-card-value green">₹<span th:text="${#numbers.formatDecimal(totalRevenue,1,'COMMA',2,'POINT')}">0</span></div>
+          <div class="stat-card-sub">All time income</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon red"><i class="fas fa-arrow-down"></i></div>
+          <div class="stat-card-label">Total Expenses</div>
+          <div class="stat-card-value red">₹<span th:text="${#numbers.formatDecimal(totalExpense,1,'COMMA',2,'POINT')}">0</span></div>
+          <div class="stat-card-sub">All time expenses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon yellow"><i class="fas fa-piggy-bank"></i></div>
+          <div class="stat-card-label">Savings Rate</div>
+          <div class="stat-card-value yellow" th:text="${totalRevenue > 0} ? ${#numbers.formatDecimal((totalRevenue - totalExpense) / totalRevenue * 100,1,1)} + '%' : '0%'">0%</div>
+          <div class="stat-card-sub">Income saved</div>
+        </div>
+      </div>
+
+      <!-- Upcoming Bills -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><span class="card-title">Upcoming Bills</span></div>
+        <div class="card-body" style="padding:8px 20px;">
+          <div class="txn-item">
+            <div class="txn-icon" style="background:#FFF0F5;"><i class="fas fa-file-invoice" style="color:#E91E8C;font-size:18px;"></i></div>
+            <div class="txn-info">
+              <div class="txn-name">Electricity Bill-123456</div>
+              <div class="txn-meta">Due 28/03/2026 (in 7 days)</div>
+            </div>
+            <span style="color:#E91E8C;font-weight:700;font-size:15px;margin-right:16px;">₹1200.00</span>
+            <button class="btn-pay">Paynow</button>
+          </div>
+          <div class="txn-item">
+            <div class="txn-icon" style="background:#FFF0F5;"><i class="fas fa-mobile-alt" style="color:#E91E8C;font-size:18px;"></i></div>
+            <div class="txn-info">
+              <div class="txn-name">Mobile Recharge – xxxxxxxx98</div>
+              <div class="txn-meta">Due 20/03/2026 (in 1 days)</div>
+            </div>
+            <span style="color:#E91E8C;font-weight:700;font-size:15px;margin-right:16px;">₹319.00</span>
+            <button class="btn-pay">Paynow</button>
+          </div>
+          <div class="txn-item" style="border-bottom:none;">
+            <div class="txn-icon" style="background:#FFF0F5;"><i class="fas fa-mobile-alt" style="color:#E91E8C;font-size:18px;"></i></div>
+            <div class="txn-info">
+              <div class="txn-name">Mobile Recharge – xxxxxxxx99</div>
+              <div class="txn-meta" style="color:#EF4444;">Overdue 20/02/2026 (Expired)</div>
+            </div>
+            <span style="color:#E91E8C;font-weight:700;font-size:15px;margin-right:16px;">₹319.00</span>
+            <button class="btn-pay">Paynow</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Income & Expense Trend Chart -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><span class="card-title">Last Week Income &amp; Expenses Trend</span></div>
+        <div class="card-body">
+          <div style="height:260px;"><canvas id="trendChart"></canvas></div>
+          <div style="display:flex;gap:20px;justify-content:center;margin-top:12px;font-size:13px;">
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#00C896;margin-right:5px;"></span>Income</span>
+            <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#6C3EF4;margin-right:5px;"></span>Expense</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expense Breakdown + Recent Activity -->
+      <div class="content-grid-2" style="margin-bottom:20px;">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Expense Breakdown</span></div>
+          <div class="card-body" style="display:flex;align-items:center;gap:20px;">
+            <div style="width:200px;height:200px;flex-shrink:0;"><canvas id="pieChart"></canvas></div>
+            <div style="flex:1;font-size:12.5px;">
+              <div style="color:#E91E8C;margin-bottom:6px;">Food &amp; Dining (38%)</div>
+              <div style="color:#F5A623;margin-bottom:6px;">Shopping (29%)</div>
+              <div style="color:#FF4B6E;margin-bottom:6px;">Bills &amp; Utilities (17%)</div>
+              <div style="color:#6C3EF4;margin-bottom:6px;">Transportation (10%)</div>
+              <div style="color:#5B6CF9;">Entertainment (7%)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="card-title">Recent Activity</span></div>
+          <div class="card-body" style="padding:8px 20px;">
+            <div class="txn-item">
+              <div class="txn-icon" style="background:#FFF0F5;font-size:20px;">📋</div>
+              <div class="txn-info"><div class="txn-name">Electricity Bill</div><div class="txn-meta">Auto</div></div>
+              <span style="color:#E91E8C;font-weight:700;">₹1200</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon" style="background:#FFF5F0;font-size:20px;">🛍️</div>
+              <div class="txn-info"><div class="txn-name">Swiggy Order</div><div class="txn-meta">Manual</div></div>
+              <span style="color:#E91E8C;font-weight:700;">₹250</span>
+            </div>
+            <div class="txn-item">
+              <div class="txn-icon" style="background:#F0FFF8;font-size:20px;">💰</div>
+              <div class="txn-info"><div class="txn-name">Salary</div><div class="txn-meta">Auto</div></div>
+              <span style="color:#00C896;font-weight:700;">₹50000</span>
+            </div>
+            <div class="txn-item" style="border-bottom:none;">
+              <div class="txn-icon" style="background:#F5F0FF;font-size:20px;">🎬</div>
+              <div class="txn-info"><div class="txn-name">Movie Ticket</div><div class="txn-meta">Manual</div></div>
+              <span style="color:#E91E8C;font-weight:700;">₹300</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="card" style="margin-bottom:20px;">
+        <div class="card-header"><span class="card-title">Recent Transaction</span></div>
+        <div class="card-body" style="padding:8px 20px;">
+          <div th:each="t : ${recentTransactions}" class="txn-item">
+            <div class="txn-icon">
+              <span th:switch="${t.category}">
+                <span th:case="'Food'">🍔</span>
+                <span th:case="'Shopping'">🛍️</span>
+                <span th:case="'Entertainment'">🎬</span>
+                <span th:case="'Travel'">🚌</span>
+                <span th:case="'Bills'">📋</span>
+                <span th:case="'Salary'">💰</span>
+                <span th:case="'Sales'">💰</span>
+                <span th:case="'Investments'">📈</span>
+                <span th:case="*">💳</span>
+              </span>
+            </div>
+            <div class="txn-info">
+              <div class="txn-name" th:text="${t.title}">-</div>
+              <div class="txn-meta" th:text="${t.category} + ' • ' + ${#temporals.format(t.date,'M/dd/yyyy')}">-</div>
+            </div>
+            <div class="txn-amount"
+                 th:classappend="${t.type.name()=='INCOME'}?'amount-income':'amount-expense'"
+                 th:text="(${t.type.name()=='INCOME'}?'+':'-')+'₹ '+${#numbers.formatDecimal(t.amount,1,'COMMA',2,'POINT')}">₹0</div>
+          </div>
+          <div th:if="${#lists.isEmpty(recentTransactions)}" style="text-align:center;padding:32px;color:#aaa;">No transactions yet</div>
+        </div>
+      </div>
+
+    </div>
+    <div th:replace="~{fragments/layout :: footer}"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script th:inline="javascript">
+  const cd = /*[[${chartData}]]*/ {};
+  const income  = cd.income  || Array(12).fill(0);
+  const expense = cd.expense || Array(12).fill(0);
+  const days = ['Mar 1','Mar 2','Mar 3','Mar 4','Mar 5','Mar 6','Mar 7'];
+  const incomeSlice  = income.slice(0,7).map((v,i)=>v||[5000,800,200,1600,200,0,300][i]||0);
+  const expenseSlice = expense.slice(0,7).map((v,i)=>v||[200,300,500,100,800,400,200][i]||0);
+
+  new Chart(document.getElementById('trendChart'), {
+    type:'line',
+    data:{ labels:days, datasets:[
+      {label:'Income', data:incomeSlice, borderColor:'#00C896', backgroundColor:'rgba(0,200,150,0.15)', fill:true, tension:0.5, pointRadius:0, borderWidth:2},
+      {label:'Expense', data:expenseSlice, borderColor:'#6C3EF4', backgroundColor:'rgba(108,62,244,0.1)', fill:true, tension:0.5, pointRadius:0, borderWidth:2}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{label:ctx=>'₹'+ctx.parsed.y.toLocaleString()}}},
+      scales:{x:{grid:{display:false},ticks:{font:{family:'Inter',size:11},color:'#aaa'}},
+              y:{grid:{color:'#F5F5FB'},ticks:{font:{family:'Inter',size:11},color:'#aaa',callback:v=>v.toLocaleString()}}}
+    }
+  });
+
+  new Chart(document.getElementById('pieChart'), {
+    type:'doughnut',
+    data:{labels:['Food & Dining','Shopping','Bills & Utilities','Transportation','Entertainment'],
+      datasets:[{data:[38,29,17,10,7],backgroundColor:['#E91E8C','#F5A623','#FF4B6E','#6C3EF4','#5B6CF9'],borderWidth:3,borderColor:'#fff',hoverOffset:6}]
+    },
+    options:{responsive:true,maintainAspectRatio:true,cutout:'55%',plugins:{legend:{display:false}}}
+  });
+</script>
+</body>
+</html>

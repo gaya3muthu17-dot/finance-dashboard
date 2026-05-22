@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Budgets')}"></head>
+<body>
+<div class="app-wrapper">
+  <div th:replace="~{fragments/layout :: sidebar('budgets')}"></div>
+  <div class="main-content">
+    <div th:replace="~{fragments/layout :: topbar('Budgets','Set and track spending limits')}"></div>
+    <div class="page-content">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:20px;">
+        <a href="#" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Budget</a>
+      </div>
+
+      <div class="budget-item">
+        <div class="budget-header">
+          <img src="https://cdn-icons-png.flaticon.com/512/2553/2553651.png" class="budget-icon" alt="food"/>
+          <div><div class="budget-title">Food &amp; Dining</div><div class="budget-date">02/03/2026-02/04/2026</div></div>
+          <div class="budget-actions"><button title="Edit"><i class="fas fa-pencil-alt"></i></button><button title="Delete"><i class="fas fa-trash"></i></button></div>
+        </div>
+        <div class="progress-row"><span>Spent: ₹1250.00</span><span>Limit: ₹1500.00</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill yellow" style="width:83%;"></div></div>
+        <div class="progress-footer"><span>90% used</span><span class="near-limit-badge"><i class="fas fa-exclamation-circle"></i> Near Limit</span></div>
+        <div style="margin-top:8px;font-size:13px;">Remaining: <span style="color:#00C896;font-weight:700;">₹250.00</span></div>
+      </div>
+
+      <div class="budget-item">
+        <div class="budget-header">
+          <img src="https://cdn-icons-png.flaticon.com/512/3774/3774278.png" class="budget-icon" alt="transport"/>
+          <div><div class="budget-title">Transportation</div><div class="budget-date">12/03/2026-12/04/2026</div></div>
+          <div class="budget-actions"><button title="Edit"><i class="fas fa-pencil-alt"></i></button><button title="Delete"><i class="fas fa-trash"></i></button></div>
+        </div>
+        <div class="progress-row"><span>Spent: ₹260.00</span><span>Limit: ₹500.00</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill green" style="width:52%;"></div></div>
+        <div class="progress-footer"><span>60% used</span></div>
+        <div style="margin-top:8px;font-size:13px;">Remaining: <span style="color:#00C896;font-weight:700;">₹240.00</span></div>
+      </div>
+
+      <div class="budget-item">
+        <div class="budget-header">
+          <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" class="budget-icon" alt="entertainment"/>
+          <div><div class="budget-title">Entertainment</div><div class="budget-date">05/03/2026-01/04/2026</div></div>
+          <div class="budget-actions"><button title="Edit"><i class="fas fa-pencil-alt"></i></button><button title="Delete"><i class="fas fa-trash"></i></button></div>
+        </div>
+        <div class="progress-row"><span>Spent: ₹160.00</span><span>Limit: ₹300.00</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill green" style="width:53%;"></div></div>
+        <div class="progress-footer"><span>53% used</span></div>
+        <div style="margin-top:8px;font-size:13px;">Remaining: <span style="color:#00C896;font-weight:700;">₹140.00</span></div>
+      </div>
+    </div>
+    <div th:replace="~{fragments/layout :: footer}"></div>
+  </div>
+</div>
+</body>
+</html>
